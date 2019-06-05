@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "conframe.h"
+#include "transform.h"
 
 using namespace std;
 
@@ -19,31 +20,22 @@ struct RGB {
 };
 
 int main() {
-	try {
-		ConFrame frame;
-		uint32_t xmid = frame.xRes()/2;
-		uint32_t ymid = frame.yRes()/2;
-		uint32_t c = RGB(0, 200, 0);
-		frame.fill(RGB(200, 0, 200));
-		// octant 1.
-		frame.line(xmid, ymid, xmid +200, ymid +100, c);
-		// octant 2.
-		frame.line(xmid, ymid, xmid +100, ymid +200, c);
-		// octant 3.
-		frame.line(xmid, ymid, xmid -100, ymid +200, c);
-		// octant 4.
-		frame.line(xmid, ymid, xmid -200, ymid +100, c);
-		// octant 5.
-		frame.line(xmid, ymid, xmid -200, ymid -100, c);
-		// octant 6.
-		frame.line(xmid, ymid, xmid -100, ymid -200, c);
-		// octant 7.
-		frame.line(xmid, ymid, xmid +100, ymid -200, c);
-		// octant 8.
-		frame.line(xmid, ymid, xmid +200, ymid -100, c);
-	}
-	catch (const char *str) {
-		cout << str << endl;
-	}
-	while (1);
+	ConFrame frame;
+	ConPoint p(frame.xRes()/2, frame.yRes()/2);
+	uint32_t c = RGB(0, 200, 0);
+	Transform<int> mat({{2, 0, 0},
+	                    {0, 2, 0},
+	                    {0, 0, 0}});
+	frame.line(p, p.x()-100, p.y()-100, c);
+	frame.line(p, p.x()+100, p.y()+100, c);
+	frame.line(p, p.x()+100, p.y()-100, c);
+	frame.line(p, p.x()-100, p.y()+100, c);
+	frame.line(p, p.x()-100, p.y()-100, c);
+
+	frame.line(p, p.x()-100, p.y(), c);
+	frame.line(p, p.x()+100, p.y(), c);
+
+	frame.line(p, p.x(), p.y()-100, c);
+	frame.line(p, p.x(), p.y()+100, c);
+
 }

@@ -64,6 +64,15 @@ void ConFrame::line(const uint32_t x0, const uint32_t y0,
 			lineNegShallow(x0, y0, x1, y1, color);
 			break;
 			// TODO: handle vertical and horizontal lines.
+		case (9):
+			lineHorizontal(x0, y0, x1, color);
+			break;
+		case (10):
+			lineVertical(x0, y0, y1, color);
+			break;
+		case (11):
+			lineDiagonal(x0, y0, x1, y1, color);
+			break;
 		default:
 			std::cerr << "Not in any octant!!!\n";
 			break;
@@ -72,6 +81,18 @@ void ConFrame::line(const uint32_t x0, const uint32_t y0,
 
 void ConFrame::line(const ConPoint p0, const ConPoint p1, const uint32_t color) {
 	line(p0.x(), p0.y(), p1.x(), p1.y(), color);
+}
+
+void ConFrame::line(const ConPoint p0,
+                    const uint32_t x1, const uint32_t y1,
+                    const uint32_t color) {
+	line(p0.x(), p0.y(), x1, y1, color);
+}
+
+void ConFrame::line(const uint32_t x0, const uint32_t y0,
+                    const ConPoint p1,
+                    const uint32_t color) {
+	line(x0, y0, p1.x(), p1.y(), color);
 }
 
 void ConFrame::fill(const uint32_t color) {
@@ -87,14 +108,21 @@ uint32_t ConFrame::yRes() const {
 	return screeninfo.yres;
 }
 
+// Returns the octant number of the line or
+// 9 for horizonatl lines,
+// 10 for vertical lines,
+// 11 for diagonal lines.
 uint8_t ConFrame::octant(const uint32_t x0, const uint32_t y0,
                          const uint32_t x1, const uint32_t y1) const {
-	if (x0 == x1)
+	if (y0 == y1)
 		return 9;
-	else if (y0 == y1)
+	else if (x0 == x1)
 		return 10;
 	const int32_t dx = static_cast<int32_t>(x1) - static_cast<int32_t>(x0);
 	const int32_t dy = static_cast<int32_t>(y1) - static_cast<int32_t>(y0);
+
+	if ((dx == dy) || (dx == -dy))
+		return 11;
 
 	double m = static_cast<double>(dy)/static_cast<double>(dx)	;
 	if ((m > 0) && (m < 1)) {
@@ -122,6 +150,41 @@ uint8_t ConFrame::octant(const uint32_t x0, const uint32_t y0,
 			return 7;
 	}
 	return 0;
+}
+
+void ConFrame::lineHorizontal(const uint32_t x0, const uint32_t y,
+                              const uint32_t x1, const uint32_t color) {
+	if (x0 == x1) {
+		pixel(x0, y, color);
+		return;
+	}
+	int inc = (x0 < x1) ? 1 : -1;
+	for (uint32_t x = x0; x != x1; x += inc)
+		pixel(x, y, color);
+}
+
+void ConFrame::lineVertical(const uint32_t x, const uint32_t y0,
+                            const uint32_t y1, const uint32_t color) {
+	if (y0 == y1) {
+		pixel(x, y0, color);
+		return;
+	}
+	int inc = (y0 < y1) ? 1 : -1;
+	for (uint32_t y = y0; y != y1; y += inc)
+		pixel(x, y, color);
+}
+
+void ConFrame::lineDiagonal(const uint32_t x0, const uint32_t y0,
+                            const uint32_t x1, const uint32_t y1,
+                            const uint32_t color) {
+
+	int xInc = (x0 < x1) ? 1 : -1;
+	int yInc = (y0 < y1) ? 1 : -1;
+	for (uint32_t x = x0, y = y0; x != x1;) {
+		pixel(x, y, color);
+		x += xInc;
+		y += yInc;
+	}
 }
 
 void ConFrame::linePosShallow(const uint32_t x0, const uint32_t y0,

@@ -5,9 +5,9 @@ CONFIG -= qt
 
 SOURCES += \
         conframe.cpp \
-        conpoint.cpp \
         main.cpp
 
 HEADERS += \
     conframe.h \
-    conpoint.h
+    conpoint.h \
+    transform.h

@@ -24,8 +24,17 @@ class ConFrame
 		void pixel(const uint32_t x, const uint32_t y, const uint32_t color);
 
 		void line(const uint32_t x0, const uint32_t y0,
-		          const uint32_t x1, const uint32_t y1, const uint32_t color);
-		void line(const ConPoint p0, const ConPoint p1, const uint32_t color);
+		          const uint32_t x1, const uint32_t y1,
+		          const uint32_t color);
+		void line(const ConPoint p0,
+		          const ConPoint p1,
+		          const uint32_t color);
+		void line(const ConPoint p0,
+		          const uint32_t x1, const uint32_t y1,
+		          const uint32_t color);
+		void line (const uint32_t x0, const uint32_t y0,
+		           const ConPoint p1,
+		           const uint32_t color);
 
 		void fill(const uint32_t color);
 
@@ -38,18 +47,30 @@ class ConFrame
 		int fb;
 		uint8_t octant(const uint32_t x0, const uint32_t y0,
 		               const uint32_t x1, const uint32_t y1) const;
+
+		void lineHorizontal(const uint32_t x0, const uint32_t y,
+		                    const uint32_t x1, const uint32_t color);
+		void lineVertical(const uint32_t x, const uint32_t y0,
+		                  const uint32_t y1, const uint32_t color);
+		void lineDiagonal(const uint32_t x0, const uint32_t y0,
+		                     const uint32_t x1, const uint32_t y1,
+		                     const uint32_t color);
+
 		void linePosShallow(const uint32_t x0, const uint32_t y0,
 		             const uint32_t x1, const uint32_t y1,
 		             const uint32_t color);
 		void linePosSteep(const uint32_t x0, const uint32_t y0,
 		             const uint32_t x1, const uint32_t y1,
 		             const uint32_t color);
+
+
 		void lineNegShallow(const uint32_t x0, const uint32_t y0,
 		             const uint32_t x1, const uint32_t y1,
 		             const uint32_t color);
 		void lineNegSteep(const uint32_t x0, const uint32_t y0,
 		             const uint32_t x1, const uint32_t y1,
 		             const uint32_t color);
+
 };
 
 #endif // CONFRAME_H
